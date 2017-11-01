@@ -53,7 +53,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
       vagaDisponivel += 1;
 
     }
-    if (topicStr != ArrayTopic[x]) {
+    if ((topicStr != ArrayTopic[x]) && (ArrayTopic == "")) {
       ArrayTopic[x] = topicStr;
       Serial.println(ArrayTopic[x]);
     }
