@@ -19,74 +19,99 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 EthernetClient ethClient;
 PubSubClient client(mqtt_server, 1883, callback, ethClient);
+long lastReconnectAttempt = 0;
 
 void setup()
 {
   Serial.begin(9600);
   while (!Serial) {}
+  Serial.println("iniciando...");
 
-  //
   if (Ethernet.begin(mac)) {
     Serial.println(Ethernet.localIP());
   } else {
     Serial.println("Falha no DHCP");
   }
-  reconnect();
-  //delay(1000);
+  delay(1500);
+  lastReconnectAttempt = 0;
 }
-
 
 
 void loop()
 {
-  boolean publicacaoVaga = true;
-  reconnect();
-  unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= interval) {
-    // save the last time you blinked the LED
+  if (!client.connected()) {
+    long now = millis();
+    if (now - lastReconnectAttempt > 5000) {
+      Serial.println("reconectando...");
+      lastReconnectAttempt = now;
+
+      if (reconnect()) {
+        lastReconnectAttempt = 0;
+      }
+    }
+  } else {
     Serial.print("Distance in CM: ");
     Serial.println(ultrasonic.distanceRead());
     int distancia = ultrasonic.distanceRead();
     if (distancia > 20) {
-      client.publish("senai-code-xp/vagas/11", "1");
+      client.publish("senai-code-xp/vagas/11", "1", true);
     } else {
-      client.publish("senai-code-xp/vagas/11", "0");
+      client.publish("senai-code-xp/vagas/11", "0",true);
     }
-    previousMillis = currentMillis;
+    client.loop();
   }
-    client.publish("senai-code-xp/vagas/11", "Vai Tricolor!!!!!",publicacaoVaga);
-    if(publicacaoVaga){
-      Serial.println("Deu CERTOOOOO!! Publicou!!");
-      }
-      else{
-        Serial.println("Nao deu certo!!! Nao Publicou...");
-      }
-      
-  
-  client.loop();
-  
 }
+/*
+  boolean publicacaoVaga = true;
+  reconnect();
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+  // save the last time you blinked the LED
 
-void reconnect() {
+  previousMillis = currentMillis;
+  }
+  client.publish("senai-code-xp/vagas/11", "Vai Tricolor!!!!!", publicacaoVaga);
+  if (publicacaoVaga) {
+  Serial.println("Deu CERTOOOOO!! Publicou!!");
+  }
+  else {
+  Serial.println("Nao deu certo!!! Nao Publicou...");
+  }
+
+
+  client.loop();
+
+  }
+
+  void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
-    Serial.print("Tentando conectar ao Servidor MQTT...");
-    // Create a random client ID
-    // Attempt to connect
-    if (client.connect("eaeaedfdfa87")) {
-      Serial.println("Cheguei aqui");
-      client.publish("senai-code-xp/vagas/11", "vaicorinthians");
-      client.subscribe("senai-code-xp/vagas/11");
-      client.setCallback(callback);
-    } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println("try again in 5 seconds");
-      // Wait 5 seconds before retrying
-      delay(1000);
-    }
+  Serial.print("Tentando conectar ao Servidor MQTT...");
+  // Create a random client ID
+  // Attempt to connect
+  if (client.connect("eaeaedfdfa87")) {
+  Serial.println("Cheguei aqui");
+  client.publish("senai-code-xp/vagas/11", "vaicorinthians");
+  client.subscribe("senai-code-xp/vagas/11");
+  client.setCallback(callback);
+  } else {
+  Serial.print("failed, rc=");
+  Serial.print(client.state());
+  Serial.println("try again in 5 seconds");
+  // Wait 5 seconds before retrying
+  delay(1000);
   }
+  }
+  }
+*/
+boolean reconnect() {
+  Serial.println("reconectando...");
+  if (client.connect("couceiroLeo")) {
+    Serial.println("conectado");
+    // client.publish("vaga/1","hello world");
+    client.subscribe("senai-code-xp/vagas/11");
+  }
+  return client.connected();
 }
-
 
 
