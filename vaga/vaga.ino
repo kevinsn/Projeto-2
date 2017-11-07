@@ -5,8 +5,6 @@
 #include <Ultrasonic.h>
 
 Ultrasonic ultrasonic(05, 06);
-
-
 byte mac[]    = {  0xDE, 0xED, 0xBA, 0xFE, 0xFE, 0x11 };
 const char* mqtt_server = "test.mosquitto.org";
 unsigned long previousMillis = 0; // will store last time LED was updated
@@ -56,54 +54,13 @@ void loop()
     if (distancia > 20) {
       client.publish("senai-code-xp/vagas/11", "1", true);
     } else {
-      client.publish("senai-code-xp/vagas/11", "0",true);
+      client.publish("senai-code-xp/vagas/11", "0", true);
     }
     client.loop();
   }
 }
-/*
-  boolean publicacaoVaga = true;
-  reconnect();
-  unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= interval) {
-  // save the last time you blinked the LED
-
-  previousMillis = currentMillis;
-  }
-  client.publish("senai-code-xp/vagas/11", "Vai Tricolor!!!!!", publicacaoVaga);
-  if (publicacaoVaga) {
-  Serial.println("Deu CERTOOOOO!! Publicou!!");
-  }
-  else {
-  Serial.println("Nao deu certo!!! Nao Publicou...");
-  }
 
 
-  client.loop();
-
-  }
-
-  void reconnect() {
-  // Loop until we're reconnected
-  while (!client.connected()) {
-  Serial.print("Tentando conectar ao Servidor MQTT...");
-  // Create a random client ID
-  // Attempt to connect
-  if (client.connect("eaeaedfdfa87")) {
-  Serial.println("Cheguei aqui");
-  client.publish("senai-code-xp/vagas/11", "vaicorinthians");
-  client.subscribe("senai-code-xp/vagas/11");
-  client.setCallback(callback);
-  } else {
-  Serial.print("failed, rc=");
-  Serial.print(client.state());
-  Serial.println("try again in 5 seconds");
-  // Wait 5 seconds before retrying
-  delay(1000);
-  }
-  }
-  }
-*/
 boolean reconnect() {
   Serial.println("reconectando...");
   if (client.connect("couceiroLeo")) {
