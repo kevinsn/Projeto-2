@@ -96,7 +96,7 @@ void setup() {
   lcd.begin(16, 2);
   // Print a message to the LCD.
   //lcd.print("hello, world!");
-  lcd.print("Kevin");
+  lcd.print("Quantidade de");
 
   Serial.println();
 
