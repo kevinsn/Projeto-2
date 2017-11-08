@@ -23,10 +23,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   Serial.println("Estou no callback");
 
-  char* mensagem = (char)payload[0] - 48;
-  Serial.print("Mensagem: ");
-  Serial.print(int(mensagem));
-  Serial.println("");
+
 
   String vaga = String(topic[20]);
   vaga += topic[21];
@@ -36,7 +33,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print(vaga.toInt());
   Serial.println("");
 
-
+  char* mensagem = (char)payload[0] - 48;
+  Serial.print("Mensagem: ");
+  Serial.print(int(mensagem));
+  Serial.println("");
 
 
 
@@ -165,7 +165,13 @@ void loop() {
   // (note: line 1 is the second row, since counting begins with 0):
   lcd.setCursor(0, 1);
   // print the number of seconds since reset:
-  lcd.print(millis() / 1000);
+  lcd.print("Vagas livres: ");
+  lcd.print(vagaDisponivel);
+
+  if(vagaDisponivel == 0){
+    digitalWrite(pinLed, HIGH);
+  }
+  
   client.loop();
 
 }
