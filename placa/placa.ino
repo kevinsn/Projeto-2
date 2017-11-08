@@ -23,18 +23,22 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   Serial.println("Estou no callback");
 
-  char* mensagem = (char)payload[0] - 48;
-  Serial.print("Mensagem: ");
-  Serial.print(int(mensagem));
-  Serial.println("");
-  //Serial.println((char)payload[0]);
+
 
   String vaga = String(topic[20]);
   vaga += topic[21];
 
+  //Serial.println((char)payload[0]);
   Serial.print("vaga: ");
   Serial.print(vaga.toInt());
   Serial.println("");
+
+  char* mensagem = (char)payload[0] - 48;
+  Serial.print("Mensagem: ");
+  Serial.print(int(mensagem));
+  Serial.println("");
+
+
 
   if (vagas[vaga.toInt()] == -1) {
     if (mensagem == 0) {
