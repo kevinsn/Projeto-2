@@ -2,11 +2,11 @@
 #include <UIPEthernet.h>
 #include <utility/logging.h>
 #include <SPI.h>
-#ifdef ONLINE
+//#ifdef ONLINE
 #include <PubSubClient.h>
-#else
-#include <SerialPubSubClient.h>
-#endif
+//#else
+//#include <SerialPubSubClient.h>
+//#endif
 
 const int rs = 9, en = 8, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
@@ -16,76 +16,112 @@ int vagaDisponivel;
 int vagaOcupada;
 
 const int pinLed = 7;
+int vagas[40];
+int newTopic;
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  String mensagem;
-  String topicStr;
 
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-    mensagem = mensagem + (char)payload[i];
-  }
+  Serial.println("Estou no callback");
 
-  Serial.println(mensagem);
+  char* mensagem = (char)payload[0] - 48;
+  Serial.print("Mensagem: ");
+  Serial.print(int(mensagem));
+  Serial.println("");
+  //Serial.println((char)payload[0]);
 
-  Serial.println();
+  String vaga = String(topic[20]);
+  vaga += topic[21];
 
-  for (int i = 0; i < length; i++) {
-    topicStr = topicStr + (char)topic[i];
-  }
-
-  Serial.println(topicStr);
-
-  //  String mensagem = String(payload[0]);
-  Serial.println("Esta Ã© mensagem que vei do mosquito:");
-  Serial.println(mensagem);
-
-  String ArrayTopic[40];
-
-  for (int x = 0; x < 40; x++) {
-    if (topicStr == ArrayTopic[x] && mensagem == 0) {
-      vagaOcupada += 1;
-      vagaDisponivel -= 1;
-
-    } else if (topicStr == ArrayTopic[x] && mensagem == 1) {
-      vagaOcupada -= 1;
-      vagaDisponivel += 1;
-
+  Serial.print("vaga: ");
+  Serial.print(vaga.toInt());
+  Serial.println("");
+  /*
+    for (int x = 0; x < 40; x++) {
+      topic[vaga[x]];
+      vagas[x];
     }
-    if ((topicStr != ArrayTopic[x]) && (ArrayTopic == "")) {
-      ArrayTopic[x] = topicStr;
-      Serial.println(ArrayTopic[x]);
-    }
+    vaga[1] = "senai-code-xp/vagas/01";
+    vaga[2] = "senai-code-xp/vagas/02";
+    vaga[3] = "senai-code-xp/vagas/03";
+    vaga[4] = "senai-code-xp/vagas/04";
+    vaga[1] = "senai-code-xp/vagas/05";
+    vaga[1] = "senai-code-xp/vagas/06";
+    vaga[1] = "senai-code-xp/vagas/07";
+    char* mensagem = (char)payload[0] - 48;
+
+    if (int(mensagem) == '0') {
+      Serial.println("Vaga nao disponivel");
+    }  else if {
+    Serial.println("Vaga disponivel");
+    }*/
+
+
+  vagas[vaga.toInt()] = mensagem;
+
+  if (vagas[vaga.toInt()] == 0) {
+    vagaOcupada += 1;
+    vagaDisponivel -= 1;
+  } else if (vagas[vaga.toInt()] == 1) {
+    vagaOcupada -= 1;
+    vagaDisponivel += 1;
   }
+
 
   /*
-    if (topicStr == "senai-code-xp/vagas/10") {
-    Serial.println("Esta Ã© mensagem que vei do mosquito:");
-    Serial.println(mensagem);
-    }
-    else
-    {
-    Serial.println("Nao recebi nenhuma mensagem neste topico");
-    Serial.println(topicStr);
-    }
-
-    if (mensagem == 0) {
-    Serial.println("Não disponível");
+    if (vaga == vagas[x] && mensagem == 0) {
     vagaOcupada += 1;
+    vagaDisponivel -= 1;
+
+    } else if (vaga == vagas[x] && mensagem == 1) {
+    vagaOcupada -= 1;
+    vagaDisponivel += 1;
+
+    } else if ((vaga != vagas[x]) && (vagas[x] == -1)) {
+    vagas[x] = vaga.toInt();
+    if (mensagem == 0) {
+      vagaOcupada += 1;
 
     } else if (mensagem == 1) {
-    Serial.println("Disponível");
-    vagaDisponivel += 1;
+      vagaOcupada -= 1;
+
+    }
+    }* /
+
     }
 
-    Serial.println("Vaga Ocupada:" + vagaOcupada);
-    Serial.println("Vaga Disponível:" + vagaDisponivel);
-  */
+    Serial.print("Vagas disponiveis: ");
+    Serial.print(vagaDisponivel);
+    Serial.print("e ocupadas: ");
+    Serial.println(vagaOcupada); * /
 
-  delay(5000);
+    /*int teste1 = topic[20] - 48;
+    int teste2 = topic[21] - 48; //- '1';
+    //Serial.print(topic[19]);
+    //Serial.println(topic[20, 21]);
+
+    //Serial.print(teste1);
+    //Serial.print(teste2);
+
+    int testeFinal = teste1 * 10 + teste2;
+
+    //Serial.println(testeFinal);
+    //Serial.print(teste1 + teste2);
+
+
+    char* newTopic = topic[20] + topic[21];
+
+    Serial.println(newTopic);
+
+    //vagas = topic[20] + topic[21];
+
+    Serial.println();*/
+
+  /*for (int i = 40; i < length; i++) {
+    if (vagas[i] == 0) {
+
+
+    }
+    }*/
 }
 
 EthernetClient ethClient;
@@ -94,6 +130,10 @@ PubSubClient client(mqtt_server, 1883, callback, ethClient);
 void setup() {
   Serial.begin(9600);
   pinMode(pinLed, OUTPUT);
+  //for que insere os valores -1 as vagas
+  for (int i = 0; i < 40; i++) {
+    vagas[i] = -1;
+  }
 
   Serial.print("oi");
 
@@ -111,13 +151,34 @@ void setup() {
     Serial.println(Ethernet.localIP());
   }
 
+  if (client.connect("Placa0X10")) {
+    /*if (client.connect("Placa0X10",
+                       "luz",
+                       1,
+                       true,
+                       "Morreu"
+                      )) {*/
+    Serial.println("connected");
+    delay(10 * 1000);
+    // Once connected, publish an announcement...
+    //client.publish("senai-code-xp/vagas/10", "vaicorinthians", true);
+    client.subscribe("senai-code-xp/vagas/#");
+
+  } else {
+    Serial.print("failed, rc=");
+    Serial.print(client.state());
+    Serial.println("try again in 5 seconds");
+    // Wait 5 seconds before retrying
+    delay(1000);
+  }
+
   //delay(1000);
 
 }
 
 void reconnect() {
   // Loop until we're reconnected
-  Serial.print("opa");
+  Serial.println("Estou no reconnect");
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
@@ -130,7 +191,7 @@ void reconnect() {
                          "Morreu"
                         )) {*/
       Serial.println("connected");
-      delay(10 * 1000);
+      //delay(10 * 1000);
       // Once connected, publish an announcement...
       client.publish("senai-code-xp/vagas/10", "vaicorinthians", true);
       client.subscribe("senai-code-xp/vagas/#");
