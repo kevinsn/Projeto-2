@@ -20,8 +20,14 @@ const int pinLcd = A0;
 int vagas[41];
 int newTopic;
 
-void callback(char* topic, byte* payload, unsigned int length) {
+unsigned long timeAtualiza = 0; // will store last time LED was updated
+// constants won't change :
+const long interval = 10000; // interval at which to blink (milliseconds)
 
+void callback(char* topic, byte* payload, unsigned int length) {
+  timeAtualiza = millis();
+  lcd.display();
+  // ,,,,, acender visor...
   Serial.println("Estou no callback");
 
   char* mensagem = (char)payload[0] - 48;
@@ -118,10 +124,11 @@ void setup() {
     Serial.println("try again in 5 seconds");
     // Wait 5 seconds before retrying
     delay(1000);
+    
   }
 
   //delay(1000);
-
+timeAtualiza = millis();
 }
 
 void reconnect() {
@@ -155,6 +162,12 @@ void reconnect() {
 }
 
 void loop() {
+  int now = millis();
+  if(now - timeAtualiza > interval){
+    Serial.println("Apagando LCD"); // colocar aqui o codigo para apagar o LED.
+    lcd.noDisplay();
+    timeAtualiza = millis();
+  }
 
   if (!client.connected()) {
     reconnect();
