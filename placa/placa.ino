@@ -16,6 +16,7 @@ int vagaDisponivel;
 int vagaOcupada;
 
 const int pinLed = 7;
+const int pinLcd = A0;
 int vagas[41];
 int newTopic;
 
@@ -23,22 +24,18 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   Serial.println("Estou no callback");
 
-
-
-  String vaga = String(topic[20]);
-  vaga += topic[21];
-
-  //Serial.println((char)payload[0]);
-  Serial.print("vaga: ");
-  Serial.print(vaga.toInt());
-  Serial.println("");
-
   char* mensagem = (char)payload[0] - 48;
   Serial.print("Mensagem: ");
   Serial.print(int(mensagem));
   Serial.println("");
+  //Serial.println((char)payload[0]);
 
+  String vaga = String(topic[20]);
+  vaga += topic[21];
 
+  Serial.print("vaga: ");
+  Serial.print(vaga.toInt());
+  Serial.println("");
 
   if (vagas[vaga.toInt()] == -1) {
     if (mensagem == 0) {
@@ -83,7 +80,9 @@ void setup() {
   for (int i = 0; i < 41; i++) {
     vagas[i] = -1;
   }
-
+  
+  pinMode(pinLcd, OUTPUT);
+    
   Serial.print("oi");
 
   // set up the LCD's number of columns and rows:
@@ -161,6 +160,9 @@ void loop() {
     reconnect();
   }
 
+  lcd.clear();
+  digitalWrite(pinLcd, LOW);
+
   // set the cursor to column 0, line 1
   // (note: line 1 is the second row, since counting begins with 0):
   lcd.setCursor(0, 1);
@@ -168,10 +170,10 @@ void loop() {
   lcd.print("Vagas livres: ");
   lcd.print(vagaDisponivel);
 
-  if(vagaDisponivel == 0){
+  if (vagaDisponivel == 0) {
     digitalWrite(pinLed, HIGH);
   }
-  
+
   client.loop();
 
 }
