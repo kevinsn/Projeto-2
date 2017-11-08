@@ -16,7 +16,7 @@ int vagaDisponivel;
 int vagaOcupada;
 
 const int pinLed = 7;
-int vagas[40];
+int vagas[41];
 int newTopic;
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -35,36 +35,37 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("vaga: ");
   Serial.print(vaga.toInt());
   Serial.println("");
-  /*
-    for (int x = 0; x < 40; x++) {
-      topic[vaga[x]];
-      vagas[x];
+
+  if (vagas[vaga.toInt()] == -1) {
+    if (mensagem == 0) {
+      vagaOcupada += 1;
+      vagas[vaga.toInt()] = mensagem;
+
+    } else if (mensagem == 1) {
+      vagaDisponivel += 1;
+      vagas[vaga.toInt()] = mensagem;
+
     }
-    vaga[1] = "senai-code-xp/vagas/01";
-    vaga[2] = "senai-code-xp/vagas/02";
-    vaga[3] = "senai-code-xp/vagas/03";
-    vaga[4] = "senai-code-xp/vagas/04";
-    vaga[1] = "senai-code-xp/vagas/05";
-    vaga[1] = "senai-code-xp/vagas/06";
-    vaga[1] = "senai-code-xp/vagas/07";
-    char* mensagem = (char)payload[0] - 48;
+  } else if (vagas[vaga.toInt()] == 0) {
+    if (mensagem == 1) {
+      vagaOcupada -= 1;
+      vagaDisponivel += 1;
+      vagas[vaga.toInt()] = mensagem;
 
-    if (int(mensagem) == '0') {
-      Serial.println("Vaga nao disponivel");
-    }  else if {
-    Serial.println("Vaga disponivel");
-    }*/
-
-
-  vagas[vaga.toInt()] = mensagem;
-
-  if (vagas[vaga.toInt()] == 0) {
-    vagaOcupada += 1;
-    vagaDisponivel -= 1;
+    }
   } else if (vagas[vaga.toInt()] == 1) {
-    vagaOcupada -= 1;
-    vagaDisponivel += 1;
+    if (mensagem == 0) {
+      vagaOcupada += 1;
+      vagaDisponivel -= 1;
+      vagas[vaga.toInt()] = mensagem;
+
+    }
   }
+
+  Serial.print("Vagas disponiveis: ");
+  Serial.print(vagaDisponivel);
+  Serial.print(" e ocupadas: ");
+  Serial.println(vagaOcupada);
 
 
   /*
@@ -131,7 +132,7 @@ void setup() {
   Serial.begin(9600);
   pinMode(pinLed, OUTPUT);
   //for que insere os valores -1 as vagas
-  for (int i = 0; i < 40; i++) {
+  for (int i = 0; i < 41; i++) {
     vagas[i] = -1;
   }
 
@@ -193,7 +194,7 @@ void reconnect() {
       Serial.println("connected");
       //delay(10 * 1000);
       // Once connected, publish an announcement...
-      client.publish("senai-code-xp/vagas/10", "vaicorinthians", true);
+      //client.publish("senai-code-xp/vagas/10", "vaicorinthians", true);
       client.subscribe("senai-code-xp/vagas/#");
 
     } else {
