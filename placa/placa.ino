@@ -27,14 +27,18 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Mensagem: ");
   Serial.print(int(mensagem));
   Serial.println("");
-  //Serial.println((char)payload[0]);
 
   String vaga = String(topic[20]);
   vaga += topic[21];
 
+  //Serial.println((char)payload[0]);
   Serial.print("vaga: ");
   Serial.print(vaga.toInt());
   Serial.println("");
+
+
+
+
 
   if (vagas[vaga.toInt()] == -1) {
     if (mensagem == 0) {
@@ -67,62 +71,6 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print(" e ocupadas: ");
   Serial.println(vagaOcupada);
 
-
-  /*
-    if (vaga == vagas[x] && mensagem == 0) {
-    vagaOcupada += 1;
-    vagaDisponivel -= 1;
-
-    } else if (vaga == vagas[x] && mensagem == 1) {
-    vagaOcupada -= 1;
-    vagaDisponivel += 1;
-
-    } else if ((vaga != vagas[x]) && (vagas[x] == -1)) {
-    vagas[x] = vaga.toInt();
-    if (mensagem == 0) {
-      vagaOcupada += 1;
-
-    } else if (mensagem == 1) {
-      vagaOcupada -= 1;
-
-    }
-    }* /
-
-    }
-
-    Serial.print("Vagas disponiveis: ");
-    Serial.print(vagaDisponivel);
-    Serial.print("e ocupadas: ");
-    Serial.println(vagaOcupada); * /
-
-    /*int teste1 = topic[20] - 48;
-    int teste2 = topic[21] - 48; //- '1';
-    //Serial.print(topic[19]);
-    //Serial.println(topic[20, 21]);
-
-    //Serial.print(teste1);
-    //Serial.print(teste2);
-
-    int testeFinal = teste1 * 10 + teste2;
-
-    //Serial.println(testeFinal);
-    //Serial.print(teste1 + teste2);
-
-
-    char* newTopic = topic[20] + topic[21];
-
-    Serial.println(newTopic);
-
-    //vagas = topic[20] + topic[21];
-
-    Serial.println();*/
-
-  /*for (int i = 40; i < length; i++) {
-    if (vagas[i] == 0) {
-
-
-    }
-    }*/
 }
 
 EthernetClient ethClient;
