@@ -11,8 +11,8 @@
 const int rs = 9, en = 8, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 byte mac[]    = {  0xDE, 0xED, 0xBA, 0xFE, 0xFE, 0x10 };
-const char* mqtt_server = "test.mosquitto.org";
-//const IPAddress mqtt_server(192, 168, 3, 186);
+//const char* mqtt_server = "test.mosquitto.org";
+const IPAddress mqtt_server(192, 168, 3, 186);
 int vagaDisponivel;
 int vagaOcupada;
 
@@ -118,8 +118,8 @@ void setup() {
     delay(10 * 1000);
     // Once connected, publish an announcement...
     //client.publish("vagas/10", "vaicorinthians", true);
-    client.subscribe("senai-code-xp/vagas/#");
-    //client.subscribe("vagas/#");
+    //client.subscribe("senai-code-xp/vagas/#");
+    client.subscribe("vagas/#");
 
   } else {
     Serial.print("failed, rc=");
@@ -153,8 +153,8 @@ void reconnect() {
       // Once connected, publish an announcement...
       //client.publish("vagas/10", "vaicorinthians", true);
       
-      client.subscribe("senai-code-xp/vagas/#");
-      //client.subscribe("vagas/#");
+     // client.subscribe("senai-code-xp/vagas/#");
+      client.subscribe("vagas/#");
 
     } else {
       Serial.print("failed, rc=");
