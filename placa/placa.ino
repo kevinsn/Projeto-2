@@ -38,8 +38,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
   Serial.println("");
   //Serial.println((char)payload[0]);
 
-  String vaga = String(topic[20]);
-  vaga += topic[21];
+  //String vaga = String(topic[20]);
+  //vaga += topic[21];
+  String vaga = String(topic[6]);
+  vaga += topic[7];
 
   Serial.print("vaga: ");
   Serial.print(vaga.toInt());
