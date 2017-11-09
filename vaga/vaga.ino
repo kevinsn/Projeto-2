@@ -6,7 +6,9 @@
 //tigger 05   echo 06
 Ultrasonic ultrasonic(05, 06);
 byte mac[]    = {  0xDE, 0xED, 0xBA, 0xFE, 0xFE, 0x11 };
-const char* mqtt_server = "test.mosquitto.org";
+
+//const char* mqtt_server = "192.168.3.186";
+const IPAddress mqtt_server(192, 168, 3, 186);
 unsigned long previousMillis = 0; // will store last time LED was updated
 // constants won't change :
 const long interval = 1000; // interval at which to blink (milliseconds)
@@ -36,8 +38,8 @@ void setup()
   if (client.connect("couceiroLeo")) {
     Serial.println("conectado");
     // client.publish("vaga/1","hello world");
-    client.subscribe("senai-code-xp/vagas/11");
-    client.connect("couceiroLeo",  "senai-code-xp/vagas/11",   0,   true,  ""); // envia mensagem vazia para o topico caso o arduino fique fora de operação
+    client.subscribe("vagas/11");
+    client.connect("couceiroLeo",  "vagas/11",   0,   true,  ""); // envia mensagem vazia para o topico caso o arduino fique fora de operação
   }
   lastReconnectAttempt = 0;
 }
@@ -63,10 +65,10 @@ void loop()
       Serial.println(ultrasonic.distanceRead());
       int distancia = ultrasonic.distanceRead();
       if (distancia > 20) {
-        client.publish("senai-code-xp/vagas/11", "1", true);
+        client.publish("vagas/10", "1", true);
         //delay(1000);
       } else {
-        client.publish("senai-code-xp/vagas/11", "0", true);
+        client.publish("vagas/10", "0", true);
         // delay(1000);
       }
       intervaloSensor = now2;
@@ -80,7 +82,7 @@ boolean reconnect() {
   if (client.connect("couceiroLeo")) {
     Serial.println("conectado");
     // client.publish("vaga/1","hello world");
-    client.subscribe("senai-code-xp/vagas/11");
+    client.subscribe("vagas/11");
     client.connect("meu-clientid",  "topico-testamento",   0,   true,  "mensagem-testamento");
   }
   return client.connected();
