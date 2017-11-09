@@ -40,7 +40,12 @@ void setup()
   }
   delay(1500);
 
-  if (client.connect("couceiroLeo")) {
+  if (client.connect("Placa0X10",
+                     "vagas/10",
+                     1,
+                     true,
+                     "Morreu"
+                    )) {
     Serial.println("conectado");
     // client.publish("vaga/1","hello world");
     client.subscribe("vagas/10");

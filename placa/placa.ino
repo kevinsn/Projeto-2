@@ -118,12 +118,6 @@ void setup() {
   }
 
   if (client.connect("Placa0X10")) {
-    /*if (client.connect("Placa0X10",
-                       "luz",
-                       1,
-                       true,
-                       "Morreu"
-                      )) {*/
     Serial.println("connected");
     delay(10 * 1000);
     // Once connected, publish an announcement...
@@ -152,12 +146,6 @@ void reconnect() {
     // Create a random client ID
     // Attempt to connect
     if (client.connect("Placa0X10")) {
-      /*if (client.connect("Placa0X10",
-                         "luz",
-                         1,
-                         true,
-                         "Morreu"
-                        )) {*/
       Serial.println("connected");
       //delay(10 * 1000);
       // Once connected, publish an announcement...
