@@ -11,35 +11,38 @@
 const int rs = 9, en = 8, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 byte mac[]    = {  0xDE, 0xED, 0xBA, 0xFE, 0xFE, 0x10 };
-//const char* mqtt_server = "192.168.3.186";
-const IPAddress mqtt_server(192, 168, 3, 186);
+const char* mqtt_server = "test.mosquitto.org";
 int vagaDisponivel;
 int vagaOcupada;
 
 const int pinLed = 7;
+const int pinLcd = A0;
 int vagas[41];
 int newTopic;
 
+unsigned long timeAtualiza = 0; // will store last time LED was updated
+// constants won't change :
+const long interval = 1000; // interval at which to blink (milliseconds)
+
 void callback(char* topic, byte* payload, unsigned int length) {
-
+  timeAtualiza = millis();
+  lcd.display();
+  digitalWrite(pinLcd, HIGH);
+  // ,,,,, acender visor...
   Serial.println("Estou no callback");
-
-
-
-  String vaga = String(topic[20]);
-  vaga += topic[21];
-
-  //Serial.println((char)payload[0]);
-  Serial.print("vaga: ");
-  Serial.print(vaga.toInt());
-  Serial.println("");
 
   char* mensagem = (char)payload[0] - 48;
   Serial.print("Mensagem: ");
   Serial.print(int(mensagem));
   Serial.println("");
+  //Serial.println((char)payload[0]);
 
+  String vaga = String(topic[20]);
+  vaga += topic[21];
 
+  Serial.print("vaga: ");
+  Serial.print(vaga.toInt());
+  Serial.println("");
 
   if (vagas[vaga.toInt()] == -1) {
     if (mensagem == 0) {
@@ -85,6 +88,8 @@ void setup() {
     vagas[i] = -1;
   }
 
+  pinMode(pinLcd, OUTPUT);
+
   Serial.print("oi");
 
   // set up the LCD's number of columns and rows:
@@ -111,8 +116,8 @@ void setup() {
     Serial.println("connected");
     delay(10 * 1000);
     // Once connected, publish an announcement...
-    //client.publish("vagas/10", "vaicorinthians", true);
-    client.subscribe("vagas/#");
+    //client.publish("senai-code-xp/vagas/10", "vaicorinthians", true);
+    client.subscribe("senai-code-xp/vagas/#");
 
   } else {
     Serial.print("failed, rc=");
@@ -120,10 +125,11 @@ void setup() {
     Serial.println("try again in 5 seconds");
     // Wait 5 seconds before retrying
     delay(1000);
+
   }
 
   //delay(1000);
-
+  timeAtualiza = millis();
 }
 
 void reconnect() {
@@ -143,8 +149,8 @@ void reconnect() {
       Serial.println("connected");
       //delay(10 * 1000);
       // Once connected, publish an announcement...
-      //client.publish("vagas/10", "vaicorinthians", true);
-      client.subscribe("vagas/#");
+      //client.publish("senai-code-xp/vagas/10", "vaicorinthians", true);
+      client.subscribe("senai-code-xp/vagas/#");
 
     } else {
       Serial.print("failed, rc=");
@@ -157,10 +163,18 @@ void reconnect() {
 }
 
 void loop() {
+  int now = millis();
+  if (now - timeAtualiza > interval) {
+    Serial.println("Apagando LCD"); // colocar aqui o codigo para apagar o LED.
+    lcd.noDisplay();
+    digitalWrite(pinLcd, LOW);
+    timeAtualiza = millis();
+  }
 
   if (!client.connected()) {
     reconnect();
   }
+
 
   // set the cursor to column 0, line 1
   // (note: line 1 is the second row, since counting begins with 0):
@@ -169,10 +183,10 @@ void loop() {
   lcd.print("Vagas livres: ");
   lcd.print(vagaDisponivel);
 
-  if(vagaDisponivel == 0){
+  if (vagaDisponivel == 0) {
     digitalWrite(pinLed, HIGH);
   }
-  
+
   client.loop();
 
 }
