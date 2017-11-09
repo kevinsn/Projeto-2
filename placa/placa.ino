@@ -19,11 +19,10 @@ int vagaOcupada;
 const int pinLed = 7;
 const int pinLcd = A0;
 int vagas[41];
-int newTopic;
 
-unsigned long timeAtualiza = 0; // will store last time LED was updated
+long timeAtualiza = 0; // will store last time LED was updated
 // constants won't change :
-const long interval = 1000; // interval at which to blink (milliseconds)
+const long interval = 10000; // interval at which to blink (milliseconds)
 
 void callback(char* topic, byte* payload, unsigned int length) {
   timeAtualiza = millis();
@@ -72,6 +71,13 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
     }
   }
+  //vagaDisponivel = Serial.readString().toInt();
+
+  if (vagaDisponivel == 0) {
+    digitalWrite(pinLed, HIGH);
+  } else {
+    digitalWrite(pinLed, LOW);
+  }
 
   Serial.print("Vagas disponiveis: ");
   Serial.print(vagaDisponivel);
@@ -97,6 +103,8 @@ void setup() {
 
   // set up the LCD's number of columns and rows:
   lcd.begin(16, 2);
+
+  lcd.noDisplay();
   // Print a message to the LCD.
   //lcd.print("hello, world!");
   lcd.print("Quantidade de");
@@ -154,8 +162,8 @@ void reconnect() {
       //delay(10 * 1000);
       // Once connected, publish an announcement...
       //client.publish("vagas/10", "vaicorinthians", true);
-      
-     // client.subscribe("senai-code-xp/vagas/#");
+
+      // client.subscribe("senai-code-xp/vagas/#");
       client.subscribe("vagas/#");
 
     } else {
@@ -171,7 +179,7 @@ void reconnect() {
 void loop() {
   int now = millis();
   if (now - timeAtualiza > interval) {
-   // Serial.println("Apagando LCD"); // colocar aqui o codigo para apagar o LED.
+    // Serial.println("Apagando LCD"); // colocar aqui o codigo para apagar o LED.
     lcd.noDisplay();
     digitalWrite(pinLcd, LOW);
   }
@@ -180,7 +188,6 @@ void loop() {
     reconnect();
   }
 
-
   // set the cursor to column 0, line 1
   // (note: line 1 is the second row, since counting begins with 0):
   lcd.setCursor(0, 1);
@@ -188,9 +195,6 @@ void loop() {
   lcd.print("Vagas livres: ");
   lcd.print(vagaDisponivel);
 
-  if (vagaDisponivel == 0) {
-    digitalWrite(pinLed, HIGH);
-  }
 
   client.loop();
 
