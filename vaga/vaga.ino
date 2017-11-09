@@ -14,6 +14,7 @@ unsigned long previousMillis = 0; // will store last time LED was updated
 const long interval = 1000; // interval at which to blink (milliseconds)
 
 const int pinLed = 7;
+const int pinLedMqtt = 8;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   // delay(1000);
@@ -59,6 +60,23 @@ void loop()
 {
   if (!client.connected()) {
     long now = millis();
+    digitalWrite(pinLedMqtt, LOW);
+    delay(250);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(250);
+    digitalWrite(pinLedMqtt, LOW);
+    delay(250);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(250);
+    digitalWrite(pinLedMqtt, LOW);
+    delay(250);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(250);
+    digitalWrite(pinLedMqtt, LOW);
+    delay(250);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(250);
+    digitalWrite(pinLedMqtt, LOW);
     if (now - lastReconnectAttempt > 3000) {
       Serial.println("reconectando...");
       lastReconnectAttempt = now;
@@ -68,6 +86,7 @@ void loop()
       }
     }
   } else if (client.connected()) {
+    digitalWrite(pinLedMqtt, HIGH);
     long now2 = millis();
     if (now2  - intervaloSensor > 1000) {
       intervaloSensor = now2;
