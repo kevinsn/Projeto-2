@@ -13,6 +13,8 @@ unsigned long previousMillis = 0; // will store last time LED was updated
 // constants won't change :
 const long interval = 1000; // interval at which to blink (milliseconds)
 
+const int pinLed = 7;
+
 void callback(char* topic, byte* payload, unsigned int length) {
   // delay(1000);
 }
@@ -25,6 +27,9 @@ long intervaloSensor = 0;
 void setup()
 {
   Serial.begin(9600);
+
+  pinMode(pinLed, OUTPUT);
+
   while (!Serial) {}
   Serial.println("iniciando...");
 
@@ -38,8 +43,8 @@ void setup()
   if (client.connect("couceiroLeo")) {
     Serial.println("conectado");
     // client.publish("vaga/1","hello world");
-    client.subscribe("vagas/11");
-    client.connect("couceiroLeo",  "vagas/11",   0,   true,  ""); // envia mensagem vazia para o topico caso o arduino fique fora de operação
+    client.subscribe("vagas/10");
+    client.connect("couceiroLeo",  "vagas/10",   0,   true,  ""); // envia mensagem vazia para o topico caso o arduino fique fora de operação
   }
   lastReconnectAttempt = 0;
 }
@@ -66,9 +71,11 @@ void loop()
       int distancia = ultrasonic.distanceRead();
       if (distancia > 20) {
         client.publish("vagas/10", "1", true);
+        digitalWrite(pinLed, HIGH);
         //delay(1000);
       } else {
         client.publish("vagas/10", "0", true);
+        digitalWrite(pinLed, LOW);
         // delay(1000);
       }
       intervaloSensor = now2;
