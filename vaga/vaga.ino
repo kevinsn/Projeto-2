@@ -5,7 +5,7 @@
 #include <Ultrasonic.h>
 //tigger 05   echo 06
 Ultrasonic ultrasonic(05, 06);
-byte mac[]    = {  0xDE, 0xED, 0xBA, 0xFE, 0xFE, 0x11 };
+byte mac[]    = {  0xDE, 0xED, 0xBA, 0xFE, 0xFE, 0x10 };
 
 //const char* mqtt_server = "192.168.3.186";
 const IPAddress mqtt_server(192, 168, 3, 186);
@@ -82,7 +82,7 @@ boolean reconnect() {
   if (client.connect("couceiroLeo")) {
     Serial.println("conectado");
     // client.publish("vaga/1","hello world");
-    client.subscribe("vagas/11");
+    client.subscribe("vagas/10");
     client.connect("meu-clientid",  "topico-testamento",   0,   true,  "mensagem-testamento");
   }
   return client.connected();
