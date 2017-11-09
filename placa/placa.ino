@@ -11,13 +11,22 @@
 const int rs = 9, en = 8, d4 = 5, d5 = 4, d6 = 3, d7 = 2;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 byte mac[]    = {  0xDE, 0xED, 0xBA, 0xFE, 0xFE, 0x10 };
-const char* mqtt_server = "test.mosquitto.org";
+//const char* mqtt_server = "192.168.3.186";
+const IPAddress mqtt_server(192, 168, 3, 186);
 int vagaDisponivel;
 int vagaOcupada;
 
 const int pinLed = 7;
 const int pinLcd = A0;
 int vagas[41];
+<<<<<<< HEAD
+=======
+int newTopic;
+
+unsigned long timeAtualiza = 0; // will store last time LED was updated
+// constants won't change :
+const long interval = 3000; // interval at which to blink (milliseconds)
+>>>>>>> 657311970c89eb6a8fe2453bdba59b038465cc16
 
 void callback(char* topic, byte* payload, unsigned int length) {
 
@@ -108,8 +117,8 @@ void setup() {
     Serial.println("connected");
     delay(10 * 1000);
     // Once connected, publish an announcement...
-    //client.publish("senai-code-xp/vagas/10", "vaicorinthians", true);
-    client.subscribe("senai-code-xp/vagas/#");
+    //client.publish("vagas/10", "vaicorinthians", true);
+    client.subscribe("vagas/#");
 
   } else {
     Serial.print("failed, rc=");
@@ -140,8 +149,8 @@ void reconnect() {
       Serial.println("connected");
       //delay(10 * 1000);
       // Once connected, publish an announcement...
-      //client.publish("senai-code-xp/vagas/10", "vaicorinthians", true);
-      client.subscribe("senai-code-xp/vagas/#");
+      //client.publish("vagas/10", "vaicorinthians", true);
+      client.subscribe("vagas/#");
 
     } else {
       Serial.print("failed, rc=");
