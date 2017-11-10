@@ -18,13 +18,23 @@ int vagaOcupada;
 
 const int pinLed = 7;
 const int pinLcd = A0;
+const int pinLedMqtt = 6;
 int vagas[41];
+float sinVal;
+int ledVal;
 
 long timeAtualiza = 0; // will store last time LED was updated
 // constants won't change :
 const long interval = 10000; // interval at which to blink (milliseconds)
 
 void callback(char* topic, byte* payload, unsigned int length) {
+  for (int x = 0; x < 180; x++) {
+    sinVal = (sin(x * (3.14212 / 180)));
+    ledVal = int(sinVal * 255);
+    analogWrite(pinLedMqtt, ledVal);
+    delay(50);
+  }
+  digitalWrite(pinLedMqtt, HIGH);
   timeAtualiza = millis();
   lcd.display();
   digitalWrite(pinLcd, HIGH);
@@ -98,6 +108,7 @@ void setup() {
   }
 
   pinMode(pinLcd, OUTPUT);
+  pinMode(pinLedMqtt, OUTPUT);
 
   Serial.print("oi");
 
@@ -118,6 +129,8 @@ void setup() {
   }
 
   if (client.connect("Placa0X10")) {
+    digitalWrite(pinLedMqtt, HIGH);
+
     Serial.println("connected");
     delay(10 * 1000);
     // Once connected, publish an announcement...
@@ -126,6 +139,8 @@ void setup() {
     client.subscribe("vagas/#");
 
   } else {
+    digitalWrite(pinLedMqtt, LOW);
+
     Serial.print("failed, rc=");
     Serial.print(client.state());
     Serial.println("try again in 5 seconds");
@@ -142,10 +157,19 @@ void reconnect() {
   // Loop until we're reconnected
   Serial.println("Estou no reconnect");
   while (!client.connected()) {
+    for (int i = 0; i < 10; i++) {
+      digitalWrite(pinLedMqtt, HIGH);
+      delay(250);
+      digitalWrite(pinLedMqtt, LOW);
+      delay(250);
+    }
+    
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
     // Attempt to connect
     if (client.connect("Placa0X10")) {
+      digitalWrite(pinLedMqtt, HIGH);
+
       Serial.println("connected");
       //delay(10 * 1000);
       // Once connected, publish an announcement...
@@ -155,10 +179,12 @@ void reconnect() {
       client.subscribe("vagas/#");
 
     } else {
+      digitalWrite(pinLedMqtt, LOW);
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println("try again in 5 seconds");
       // Wait 5 seconds before retrying
+
       delay(1000);
     }
   }
@@ -170,6 +196,7 @@ void loop() {
     // Serial.println("Apagando LCD"); // colocar aqui o codigo para apagar o LED.
     lcd.noDisplay();
     digitalWrite(pinLcd, LOW);
+
   }
 
   if (!client.connected()) {
