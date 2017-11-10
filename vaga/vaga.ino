@@ -92,25 +92,25 @@ void loop()
 }
 
 boolean reconnect() {
+      digitalWrite(pinLedMqtt, LOW);
+    delay(250);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(250);
+    digitalWrite(pinLedMqtt, LOW);
+    delay(250);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(250);
+    digitalWrite(pinLedMqtt, LOW);
+    delay(250);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(250);
+    digitalWrite(pinLedMqtt, LOW);
+    delay(250);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(250);
+    digitalWrite(pinLedMqtt, LOW);
   Serial.println("reconectando...");
   if (client.connect("couceiroLeo")) {
-    digitalWrite(pinLedMqtt, LOW);
-    delay(250);
-    digitalWrite(pinLedMqtt, HIGH);
-    delay(250);
-    digitalWrite(pinLedMqtt, LOW);
-    delay(250);
-    digitalWrite(pinLedMqtt, HIGH);
-    delay(250);
-    digitalWrite(pinLedMqtt, LOW);
-    delay(250);
-    digitalWrite(pinLedMqtt, HIGH);
-    delay(250);
-    digitalWrite(pinLedMqtt, LOW);
-    delay(250);
-    digitalWrite(pinLedMqtt, HIGH);
-    delay(250);
-    digitalWrite(pinLedMqtt, LOW);
     Serial.println("conectado");
     // client.publish("vaga/1","hello world");
     client.subscribe("vagas/10");
