@@ -77,7 +77,7 @@ void loop()
       Serial.print("Distance in CM: ");
       Serial.println(ultrasonic.distanceRead());
       int distancia = ultrasonic.distanceRead();
-      if (distancia > 9) {
+      if (distancia > 7) {
         client.publish("vagas/10", "1", true);
         digitalWrite(pinLed, HIGH);
         //delay(1000);
