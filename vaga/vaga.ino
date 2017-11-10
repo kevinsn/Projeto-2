@@ -73,11 +73,10 @@ void loop()
     digitalWrite(pinLedMqtt, HIGH);
     long now2 = millis();
     if (now2  - intervaloSensor > 1000) {
-      intervaloSensor = now2;
       Serial.print("Distance in CM: ");
-      Serial.println(ultrasonic.distanceRead());
-      int distancia = ultrasonic.distanceRead();
-      if (distancia > 7) {
+      int distancia =  ultrasonic.distanceRead();
+      Serial.println(distancia);
+      if (distancia > 5) {
         client.publish("vagas/10", "1", true);
         digitalWrite(pinLed, HIGH);
         //delay(1000);
