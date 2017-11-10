@@ -35,7 +35,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     digitalWrite(pinLedMqtt, HIGH);
     delay(125);
   }
-  
+
   //digitalWrite(pinLedMqtt, HIGH);
   timeAtualiza = millis();
   lcd.display();
@@ -178,6 +178,9 @@ void reconnect() {
 
       // client.subscribe("senai-code-xp/vagas/#");
       client.subscribe("vagas/#");
+      
+      lcd.display();
+      digitalWrite(pinLcd, HIGH);
 
     } else {
       digitalWrite(pinLedMqtt, LOW);
@@ -185,6 +188,9 @@ void reconnect() {
       Serial.print(client.state());
       Serial.println("try again in 5 seconds");
       // Wait 5 seconds before retrying
+      
+      lcd.noDisplay();
+      digitalWrite(pinLcd, LOW);
 
       delay(1000);
     }
