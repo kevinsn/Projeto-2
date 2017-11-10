@@ -28,13 +28,15 @@ long timeAtualiza = 0; // will store last time LED was updated
 const long interval = 10000; // interval at which to blink (milliseconds)
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  for (int x = 0; x < 180; x++) {
-    sinVal = (sin(x * (3.14212 / 180)));
-    ledVal = int(sinVal * 255);
-    analogWrite(pinLedMqtt, ledVal);
-    delay(50);
+
+  for (int i = 0; i < 2; i++) {
+    digitalWrite(pinLedMqtt, LOW);
+    delay(125);
+    digitalWrite(pinLedMqtt, HIGH);
+    delay(125);
   }
-  digitalWrite(pinLedMqtt, HIGH);
+  
+  //digitalWrite(pinLedMqtt, HIGH);
   timeAtualiza = millis();
   lcd.display();
   digitalWrite(pinLcd, HIGH);
@@ -157,13 +159,12 @@ void reconnect() {
   // Loop until we're reconnected
   Serial.println("Estou no reconnect");
   while (!client.connected()) {
-    for (int i = 0; i < 10; i++) {
-      digitalWrite(pinLedMqtt, HIGH);
-      delay(250);
-      digitalWrite(pinLedMqtt, LOW);
-      delay(250);
+    for (int x = 0; x < 180; x++) {
+      sinVal = (sin(x * (3.14212 / 180)));
+      ledVal = int(sinVal * 255);
+      analogWrite(pinLedMqtt, ledVal);
+      delay(25);
     }
-    
     Serial.print("Attempting MQTT connection...");
     // Create a random client ID
     // Attempt to connect
