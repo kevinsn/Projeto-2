@@ -133,7 +133,7 @@ void setup() {
   if (client.connect("Placa0X10")) {
     digitalWrite(pinLedMqtt, HIGH);
 
-    Serial.println("conectado");
+    Serial.println("connected");
     delay(10 * 1000);
     // Once connected, publish an announcement...
     //client.publish("vagas/10", "vaicorinthians", true);
